@@ -28,4 +28,4 @@ const errorLogSchema: Schema = new Schema({
 
 const ErrorLog = mongoose.model<IErrorLog>("ErrorLog", errorLogSchema);
 
-export {ErrorLog , IErrorLog} ;
+export { ErrorLog, IErrorLog };

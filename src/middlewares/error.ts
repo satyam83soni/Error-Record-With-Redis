@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import {ErrorLog} from "../models/error";
+import { ErrorLog } from "../models/error";
 import redisClient from "../redis/redis";
-class Error {
+class Middleware {
   private static errorMiddleware(
     err: any,
     req: Request,
@@ -56,14 +56,14 @@ class Error {
       try {
         await fn(req, res, next);
       } catch (error: any) {
-        await Error.logErrorToDatabaseAndQueue(error);
+        await this.logErrorToDatabaseAndQueue(error);
         next(error);
       }
     };
   }
 
-  static wrap = Error.TryCatch;
-  static getError = Error.errorMiddleware;
+  static wrap = this.TryCatch;
+  static getError = this.errorMiddleware;
 }
 
-export default Error;
+export default Middleware;
