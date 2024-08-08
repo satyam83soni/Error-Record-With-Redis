@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import ErrorLog from "../models/Error";
+import {ErrorLog} from "../models/error";
 import redisClient from "../redis/redis";
 class Error {
   private static errorMiddleware(
