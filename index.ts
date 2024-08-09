@@ -1,11 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
-import Error from "./src/middlewares/error";
 import Database from "./src/utils/features";
 import { rateLimit } from "express-rate-limit";
 import cors from "cors";
 import errorRouter from "./src/routes/error"
 const app = express();
+import EmailProcessor from "./src/redis/emailer";
+
 
 dotenv.config({
   path: ".env",

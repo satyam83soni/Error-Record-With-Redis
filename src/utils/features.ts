@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-import redisClient from "../redis/redis";
-
 class Database {
   private static async connectDB(uri: string | undefined): Promise<void> {
     try {

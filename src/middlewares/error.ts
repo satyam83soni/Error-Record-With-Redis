@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { ErrorLog } from "../models/error";
-import redisClient from "../redis/redis";
+import Bull from "../redis/emailQueue";
+import { IErrorLog } from "../models/error";
+
 class Middleware {
   private static errorMiddleware(
     err: any,
@@ -16,7 +18,9 @@ class Middleware {
     });
   }
 
-  private static async logErrorToDatabaseAndQueue(error: any): Promise<void> {
+  private static async logErrorToDatabaseAndQueue(
+    error: IErrorLog
+  ): Promise<void> {
     const errorDetails = {
       name: error.name,
       message: error.message,
@@ -26,6 +30,7 @@ class Middleware {
       syscall: error.syscall || null,
       stack: error.stack,
       resolved: false,
+      platform: error.platform,
     };
 
     try {
@@ -33,11 +38,10 @@ class Middleware {
     } catch (dbError) {
       console.error("Error logging to database:", dbError);
     }
-
     try {
-      await redisClient.rPush("errorQueue", JSON.stringify(errorDetails));
-    } catch (redisError) {
-      console.error("Error pushing to Redis queue:", redisError);
+      await Bull.pushToQueue(errorDetails);
+    } catch (error) {
+      console.log("Queue pushing error", error);
     }
   }
 

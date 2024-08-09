@@ -3,12 +3,19 @@ import Validation from "../utils/validations";
 import { Request, Response } from "express";
 import { ApiError } from "../utils/apiError";
 import Middleware from "../middlewares/error";
+import Bull from "../redis/emailQueue";
 class Controller {
   private static async createError(req: Request, res: Response): Promise<void> {
     const parsed = Validation.safeParse(req.body);
 
     if (!parsed) {
       throw new ApiError(400, "Parsing of data unsuccessfull");
+    }
+
+    try {
+      await Bull.pushToQueue(req.body);
+    } catch (error) {
+      console.log("pushing to queue error", error);
     }
     const error = new ErrorLog(parsed);
     const saved = await error.save();
@@ -45,11 +52,9 @@ class Controller {
   ): Promise<void> {
     const errorId = req.params.id;
 
-    const updatedError = await ErrorLog.findByIdAndUpdate(
-      errorId,
-      { resolved: true },
-      { new: true }
-    );
+    const updatedError = await ErrorLog.findByIdAndUpdate(errorId, {
+      resolved: true,
+    });
 
     if (!updatedError) {
       throw new ApiError(401, "Unable to update");
