@@ -19,18 +19,18 @@ class Middleware {
   }
 
   private static async logErrorToDatabaseAndQueue(
-    error: IErrorLog
+    error: any
   ): Promise<void> {
     const errorDetails = {
-      name: error.name,
-      message: error.message,
-      code: error.code || null,
-      errno: error.errno || null,
+      name: error?.name,
+      message: error?.message,
+      code: error?.code || null,
+      errno: error?.errno || null,
       path: error.path || null,
-      syscall: error.syscall || null,
-      stack: error.stack,
+      syscall: error?.syscall || null,
+      stack: error?.stack,
       resolved: false,
-      platform: error.platform,
+      platform: error?.platform,
     };
 
     try {
@@ -67,7 +67,8 @@ class Middleware {
   }
 
   static wrap = this.TryCatch;
-  static getError = this.errorMiddleware;
+  static giveError = this.logErrorToDatabaseAndQueue;
+
 }
 
 export default Middleware;

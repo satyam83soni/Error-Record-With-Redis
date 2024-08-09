@@ -1,12 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
-import Database from "./src/utils/features";
+import Database from "./utils/features";
 import { rateLimit } from "express-rate-limit";
 import cors from "cors";
-import errorRouter from "./src/routes/error"
+import errorRouter from "./routes/error";
 const app = express();
-import EmailProcessor from "./src/redis/emailer";
-
+import EmailProcessor from "./redis/emailer";
 
 dotenv.config({
   path: ".env",
@@ -19,15 +18,10 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
-
+EmailProcessor.runWorker()
 app.use(express.json());
 
-
-
-Database.connecTOtDB(process.env.MONGO_URL);
-
-
-
+Database.connecTOtDB();
 
 app.use(
   rateLimit({
@@ -37,14 +31,11 @@ app.use(
       "Too many requests from this IP, please try again later after 15 mins.",
   })
 );
-
-
+app.use("/error", errorRouter);
 app.get("/", (req, res) => {
   res.send("Hello");
 });
 
-
-app.use("api/v1/error" , errorRouter);
 
 
 app.listen(3000, () => {

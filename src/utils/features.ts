@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 
 class Database {
-  private static async connectDB(uri: string | undefined): Promise<void> {
+  private static async connectDB(): Promise<void> {
     try {
-      const uri: string = "your_mongo_database_uri_here"; // Replace with your MongoDB connection string
-      await mongoose.connect(uri);
+      await mongoose.connect("mongodb+srv://satyam:ZjevYfDzzUqCH1Qj@cluster0.k7sgg2s.mongodb.net/dice-roll?retryWrites=true&w=majority&appName=Cluster0");
       console.log("Connected to MongoDB successfully");
     } catch (error) {
       console.error("Error connecting to MongoDB:", (error as Error).message);

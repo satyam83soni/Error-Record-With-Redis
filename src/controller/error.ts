@@ -6,18 +6,19 @@ import Middleware from "../middlewares/error";
 import Bull from "../redis/emailQueue";
 class Controller {
   private static async createError(req: Request, res: Response): Promise<void> {
-    const parsed = Validation.safeParse(req.body);
+    //  parsed = Validation.safeParse(req.body);
 
-    if (!parsed) {
-      throw new ApiError(400, "Parsing of data unsuccessfull");
-    }
+    // if (!parsed) {
+    //   constthrow new ApiError(400, "Parsing of data unsuccessfull");
+    // }
 
     try {
       await Bull.pushToQueue(req.body);
+      console.log("pushed");
     } catch (error) {
       console.log("pushing to queue error", error);
     }
-    const error = new ErrorLog(parsed);
+    const error = new ErrorLog(req.body);
     const saved = await error.save();
     res.status(201).json({ msg: "Succcessfull", data: saved });
   }

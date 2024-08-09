@@ -1,8 +1,10 @@
 import { Queue } from "bullmq";
 import { ApiError } from "../utils/apiError";
-import { any } from "zod";
 
-const notificationQueue = new Queue("email-queue");
+const notificationQueue = new Queue("email-queue", { connection: {
+  host: "redis-server",
+  port: 6379
+}});
 class Bull {
   private static async init(error: any) {
     try {
@@ -10,15 +12,15 @@ class Bull {
         email: "satyam73soni@gmail.com",
         subject: "Regaurding the error at backend server",
         text: {
-          name: error.name,
-          message: error.message,
-          code: error.code,
-          errno: error.errno,
-          path: error.path,
-          syscall: error.syscall,
-          stack: error.stack,
+          name: error?.name,
+          message: error?.message,
+          code: error?.code,
+          errno: error?.errno,
+          path: error?.path,
+          syscall: error?.syscall,
+          stack: error?.stack,
           resolved: false,
-          platform: error.platform,
+          platform: error?.platform,
         },
       });
     } catch (err) {
