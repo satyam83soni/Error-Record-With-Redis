@@ -25,6 +25,9 @@ class Controller {
 
   private static async findError(req: Request, res: Response): Promise<void> {
     const toFind = req.query.q as string;
+    if(!toFind){
+      throw new ApiError(400 ,  "Give the type you want");
+    }
     const page = parseInt(req.query.page as string) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
