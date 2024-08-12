@@ -13,12 +13,16 @@ dotenv.config({
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "*"],
+    origin: [
+      "http://localhost:5173",
+      "https://mayank-web-dev.s3.ap-south-1.amazonaws.com/index.html",
+      "*",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
-EmailProcessor.runWorker()
+EmailProcessor.runWorker();
 app.use(express.json());
 
 Database.connecTOtDB();
@@ -35,8 +39,6 @@ app.use("/error", errorRouter);
 app.get("/", (req, res) => {
   res.send("Hello");
 });
-
-
 
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`);
