@@ -13,7 +13,8 @@ class Controller {
     // }
 
     try {
-      await Bull.pushToQueue(req.body);
+      await Bull.pushToAdminQueue(req.body);
+      await Bull.pushUserQueue(req.body);
       console.log("pushed");
     } catch (error) {
       console.log("pushing to queue error", error);

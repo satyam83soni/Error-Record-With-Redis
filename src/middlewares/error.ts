@@ -39,7 +39,7 @@ class Middleware {
       console.error("Error logging to database:", dbError);
     }
     try {
-      await Bull.pushToQueue(errorDetails);
+      await Bull.pushToAdminQueue(errorDetails);
     } catch (error) {
       console.log("Queue pushing error", error);
     }

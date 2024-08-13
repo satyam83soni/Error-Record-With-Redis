@@ -15,6 +15,8 @@ interface IErrorLog extends Document {
 
 const errorLogSchema: Schema = new Schema({
   name: { type: String, required: true },
+  userName: {type :String , default :null },
+  userEmail:{type : String , default : null},
   message: { type: String, required: true },
   code: { type: String, default: null },
   errno: { type: Number, default: null },
